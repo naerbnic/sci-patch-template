@@ -1,0 +1,6 @@
+# Bazel creates several different directories during the build, all of them
+# starting with "bazel-".
+/bazel-*
+
+# Remove lock file, as it changes between machines.
+/MODULE.bazel.lock

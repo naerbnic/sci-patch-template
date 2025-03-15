@@ -1,0 +1,31 @@
+"""Top-level Bazel module file for a game patch project repo."""
+
+# rules_sci provides the base rules used to configure the different steps in
+# building a game patch.
+bazel_dep(name = "rules_sci", version = "0.0.1")
+
+# toolchains_scinc provides a way for your project to configure which scinc
+# binary to use to build sci script targets from rules_sci.
+bazel_dep(name = "toolchains_scinc", version = "0.0.1")
+
+# We use the release extension to download the most recent release of scinc
+# when we build sci scripts.
+#
+# The dev_dependency flag is set so that we only configure a toolchain when
+# building directly in this project. If for whatever reason we put this up to
+# be imported by another project, we don't want to force that project to use
+# this specific toolchain.
+scinc_release = use_extension(
+  "@toolchains_scinc//toolchain/extensions:release.bzl",
+  "scinc_release",
+  dev_dependency = True
+)
+
+# Import the "scinc_release" repo from the extension.
+use_repo(scinc_release, "scinc_release")
+
+# Add the scinc toolchain as the builder for sci scripts.
+register_toolchains(
+  "@scinc_release//:scinc_toolchain",
+  dev_dependency = True,
+)
